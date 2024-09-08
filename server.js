@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+
+// Use the environment port or default to 3000 for local development
+const PORT = process.env.PORT || 3000;
 
 // Import the routes from getdata.js
 const getDataRoutes = require('./getdata');
@@ -12,6 +14,6 @@ app.use(express.json());
 app.use('/api', getDataRoutes);
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
