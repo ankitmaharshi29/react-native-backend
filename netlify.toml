@@ -1,7 +1,7 @@
 [build]
-  functions = "functions"  # Directory for serverless functions
+  functions = "functions" 
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  to = "/.netlify/functions/server"  
   status = 200
