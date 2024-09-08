@@ -1,2 +1,5 @@
 [build]
-functions = "functions"
+  functions = "functions"
+  publish = "public"  
+
+[build.environment] # Set the Node.js version if needed
