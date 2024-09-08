@@ -1,19 +1,13 @@
 const express = require('express');
+const serverless = require('serverless-http'); // Convert express app to Lambda handler
 const app = express();
 const port = 3000;
 
-// Import the routes from getdata.js
+// Import routes
 const getDataRoutes = require('./getdata');
 
-// Middleware to parse JSON
 app.use(express.json());
-
-// Use the routes
 app.use('/api', getDataRoutes);
 
-
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+// Export the handler for Netlify
+module.exports.handler = serverless(app);
