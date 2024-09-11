@@ -127,7 +127,7 @@ router.get('/tags', (req, res) => {
 });
 
 router.get('/doupdate', (req, res) => {
-  res.json(false);
+  res.json(true);
 });
 
 
