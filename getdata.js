@@ -53,7 +53,7 @@ const mediaList = {
     },
     {
       "video": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-      "tag": "motivition",
+      "tag": "Ankit",
       "type": "video"
     },
     {
@@ -127,7 +127,7 @@ router.get('/tags', (req, res) => {
 });
 
 router.get('/doupdate', (req, res) => {
-  res.json(true);
+  res.json(true );
 });
 
 
