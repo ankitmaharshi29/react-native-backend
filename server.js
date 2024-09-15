@@ -14,7 +14,9 @@ dotenv.config();
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
-
+  console.log('Mongo URI:', process.env.MONGO_URI);
+  console.log('JWT Secret:', process.env.JWT_SECRET);
+  
 // Middleware to parse JSON
 app.use(express.json());
 
