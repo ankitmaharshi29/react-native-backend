@@ -7,12 +7,21 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 // JWT Secret key
-const jwtSecret = process.env.JWT_SECRET;
-console.log(jwtSecret);
-
 if (!jwtSecret) {
   console.error('JWT_SECRET is not defined in environment variables.');
 }
+
+// Middleware to verify token and extract userId
+const verifyToken = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'No token provided' });
+
+  jwt.verify(token, jwtSecret, (err, decoded) => {
+    if (err) return res.status(401).json({ message: 'Invalid token' });
+    req.userId = decoded.id;
+    next();
+  });
+};
 
 // @route  POST /api/auth/signup
 // @desc   Register a new user
@@ -76,16 +85,20 @@ router.post('/login', async (req, res) => {
 
 // @route  POST /api/auth/change-password
 // @desc   Change user password
-router.post('/change-password', async (req, res) => {
-  const { userId, currentPassword, newPassword } = req.body;
+router.post('/change-password', verifyToken, async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
 
-  if (!userId || !currentPassword || !newPassword) {
+  if (!currentPassword || !newPassword || !confirmPassword) {
     return res.status(400).json({ message: 'Please provide all required fields' });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({ message: 'New passwords do not match' });
   }
 
   try {
     // Find user by userId
-    let user = await User.findById(userId);
+    let user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     // Compare current password
@@ -106,5 +119,4 @@ router.post('/change-password', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
 module.exports = router;
