@@ -5,12 +5,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const dotenv = require('dotenv');
 
-
 dotenv.config();
 // JWT Secret key
 const jwtSecret = process.env.JWT_SECRET;
-console.log(jwtSecret)
-
+console.log(jwtSecret);
 
 if (!jwtSecret) {
   console.error('JWT_SECRET is not defined in environment variables.');
@@ -41,7 +39,6 @@ router.post('/signup', async (req, res) => {
     await newUser.save();
 
     // Return JWT token
-
     const token = jwt.sign({ id: newUser._id }, jwtSecret, { expiresIn: '1h' });
     res.json({ token });
   } catch (err) {
@@ -77,24 +74,35 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// @route  POST /api/auth/change-password
+// @desc   Change user password
 router.post('/change-password', async (req, res) => {
   const { userId, currentPassword, newPassword } = req.body;
 
+  if (!userId || !currentPassword || !newPassword) {
+    return res.status(400).json({ message: 'Please provide all required fields' });
+  }
+
   try {
-    let user = await User.findOne({ email });
+    // Find user by userId
+    let user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+    // Compare current password
     const match = await bcrypt.compare(currentPassword, user.password);
     if (!match) return res.status(400).json({ message: 'Current password is incorrect' });
 
+    // Check new password length
     if (newPassword.length < 6) return res.status(400).json({ message: 'New password is too short' });
 
+    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     await user.save();
 
     res.status(200).json({ message: 'Password changed successfully' });
   } catch (error) {
+    console.error('Error changing password:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
