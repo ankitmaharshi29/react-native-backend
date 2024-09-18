@@ -81,7 +81,7 @@ router.post('/change-password', async (req, res) => {
   const { userId, currentPassword, newPassword } = req.body;
 
   try {
-    const user = await User.findById(userId);
+    let user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const match = await bcrypt.compare(currentPassword, user.password);
