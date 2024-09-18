@@ -7,7 +7,7 @@ const router = express.Router();
 const mediaList = {
   "list": [
     {
-      "image": "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d",
+      "image": "https://www.w3schools.com/w3images/lights.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -17,7 +17,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1534126511673-b6899657816a",
+      "image": "https://www.w3schools.com/w3images/falls.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -27,7 +27,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1533514114760-4fa81101f90c",
+      "image": "https://www.w3schools.com/w3images/nature.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -37,7 +37,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1547658717-dac392a4f9e9",
+      "image": "https://www.w3schools.com/w3images/forest.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -47,7 +47,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1504198458649-3128b9327fcf",
+      "image": "https://www.w3schools.com/w3images/mountains.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -57,7 +57,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1470115636492-6d2b56f04eaf",
+      "image": "https://www.w3schools.com/w3images/bridge.jpg",
       "tag": "political",
       "type": "image"
     },
@@ -67,7 +67,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1527191711875-2080fbf63d14",
+      "image": "https://www.w3schools.com/w3images/snow.jpg",
       "tag": "day_special",
       "type": "image"
     },
@@ -77,7 +77,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
+      "image": "https://www.w3schools.com/w3images/sun.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -87,7 +87,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1519648023493-d82b5f8d7b8a",
+      "image": "https://www.w3schools.com/w3images/sea.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -97,7 +97,7 @@ const mediaList = {
       "type": "video"
     },
     {
-      "image": "https://images.unsplash.com/photo-1472457897821-70d3819a0e24",
+      "image": "https://www.w3schools.com/w3images/rocks.jpg",
       "tag": "love",
       "type": "image"
     },
@@ -112,7 +112,7 @@ const mediaList = {
 // Data for tags
 const tags = {
   "tags":[
-        "all", "day_special", "love", "sad","motivation","new","political"
+        "all", "day_special", "love", "sad","motivation","new","political","Today"
     ]
 }
 
