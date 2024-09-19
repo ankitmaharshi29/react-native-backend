@@ -74,36 +74,45 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
+
+
 router.post('/change-password', async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ msg: 'Please provide both old and new passwords' });
+  }
+
   try {
-    const { currentPassword, newPassword } = req.body;
-
-    // Get token from headers
-    const token = req.headers.authorization.split(' ')[1];
-
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // Extract user ID from JWT token
+    const token = req.header('Authorization').replace('Bearer ', '');
+    const decoded = jwt.verify(token, jwtSecret);
     const user = await User.findById(decoded.id);
 
-    // Validate current password
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: 'Incorrect current password' });
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
     }
 
-    // Hash new password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    // Compare old password
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Incorrect old password' });
+    }
 
-    // Update password in database
-    user.password = hashedPassword;
+    // Hash new password and update
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+
+    // Save updated user
     await user.save();
 
-    res.status(200).json({ message: 'Password changed successfully' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Server error' });
+    res.json({ msg: 'Password changed successfully' });
+  } catch (err) {
+    console.error('Error during password change:', err);
+    res.status(500).json({ msg: 'Server error' });
   }
 });
+
 
 
 
