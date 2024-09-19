@@ -19,7 +19,7 @@ mongoose.connect(process.env.MONGO_URI)
   
 // Middleware to parse JSON
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 // Use routes
 app.use('/api', getDataRoutes);
 app.use('/api/auth', authRoutes);

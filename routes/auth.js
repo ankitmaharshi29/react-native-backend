@@ -6,9 +6,11 @@ const User = require('../models/user');
 const dotenv = require('dotenv');
 
 dotenv.config();
-// JWT Secret key
-if (!jwtSecret) {
+const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {   
   console.error('JWT_SECRET is not defined in environment variables.');
+  process.exit(1);
 }
 
 // Middleware to verify token and extract userId
@@ -83,13 +85,11 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// @route  POST /api/auth/change-password
-// @desc   Change user password
 router.post('/change-password', verifyToken, async (req, res) => {
   const { currentPassword, newPassword, confirmPassword } = req.body;
 
   if (!currentPassword || !newPassword || !confirmPassword) {
-    return res.status(400).json({ message: 'Please provide all required fields' });
+    return res.status(400).json({ message: 'Please  all required fields' });
   }
 
   if (newPassword !== confirmPassword) {
@@ -119,4 +119,5 @@ router.post('/change-password', verifyToken, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 module.exports = router;
