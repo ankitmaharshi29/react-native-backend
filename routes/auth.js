@@ -13,17 +13,7 @@ if (!jwtSecret) {
   process.exit(1);
 }
 
-// Middleware to verify token and extract userId
-const verifyToken = (req, res, next) => {
-  const token = req.headers['authorization']?.split(' ')[1];
-  if (!token) return res.status(401).json({ message: 'No token provided' });
 
-  jwt.verify(token, jwtSecret, (err, decoded) => {
-    if (err) return res.status(401).json({ message: 'Invalid token' });
-    req.userId = decoded.id;
-    next();
-  });
-};
 
 // @route  POST /api/auth/signup
 // @desc   Register a new user
@@ -84,40 +74,37 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 });
-
-router.post('/change-password', verifyToken, async (req, res) => {
-  const { currentPassword, newPassword, confirmPassword } = req.body;
-
-  if (!currentPassword || !newPassword || !confirmPassword) {
-    return res.status(400).json({ message: 'Please  all required fields' });
-  }
-
-  if (newPassword !== confirmPassword) {
-    return res.status(400).json({ message: 'New passwords do not match' });
-  }
-
+router.post('/change-password', async (req, res) => {
   try {
-    // Find user by userId
-    let user = await User.findById(req.userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    const { currentPassword, newPassword } = req.body;
 
-    // Compare current password
-    const match = await bcrypt.compare(currentPassword, user.password);
-    if (!match) return res.status(400).json({ message: 'Current password is incorrect' });
+    // Get token from headers
+    const token = req.headers.authorization.split(' ')[1];
 
-    // Check new password length
-    if (newPassword.length < 6) return res.status(400).json({ message: 'New password is too short' });
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    // Validate current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Incorrect current password' });
+    }
 
     // Hash new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    // Update password in database
     user.password = hashedPassword;
     await user.save();
 
     res.status(200).json({ message: 'Password changed successfully' });
   } catch (error) {
-    console.error('Error changing password:', error);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 });
+
+
 
 module.exports = router;
